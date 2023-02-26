@@ -31,4 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'discord' => [
+        'key' => env('DISCORD_CLIENT_ID'),
+        'secret' => env('DISCORD_CLIENT_SECRET'),
+    ]
 ];

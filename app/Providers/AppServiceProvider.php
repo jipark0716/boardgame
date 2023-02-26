@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +23,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Blade::directive('viteAssets', function (): string {
+            if (App::isProduction()) {
+
+            } else {
+                return '<script type="module" src="' . asset('/resources/js/app.js') . '"></script>'.
+                '<link rel="stylesheet" href="' . asset('/resources/sass/app.scss') . '">';
+            }
+        });
     }
 }
