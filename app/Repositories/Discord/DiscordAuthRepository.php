@@ -6,6 +6,7 @@ namespace App\Repositories\Discord;
 
 use App\Exceptions\DiscordAuthrizeException;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Validator;
 
 class DiscordAuthRepository extends DiscordRepository
 {
@@ -37,6 +38,19 @@ class DiscordAuthRepository extends DiscordRepository
             condition: $response->successful(),
             exception: new DiscordAuthrizeException(
                 grantType: $grantType,
+                response: $response,
+            ),
+        );
+
+        throw_unless(
+            condition: Validator::make($response->json(), [
+                'access_token' => 'required|string',
+                'expires_in' => 'required|int',
+                'refresh_token' => 'required|string',
+                'scope' => 'required|string',
+            ])->passes(),
+            exception: new DiscordAuthrizeException(
+                grantType: 'unknown',
                 response: $response,
             ),
         );

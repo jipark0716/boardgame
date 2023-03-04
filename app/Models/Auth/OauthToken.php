@@ -7,6 +7,7 @@ namespace App\Models\Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\OauthProviderType;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
@@ -19,6 +20,7 @@ use App\Enums\OauthProviderType;
  * @property \Illuminate\Support\Carbon $expired_at
  * @property ?\Illuminate\Support\Carbon $created_at
  * @property ?\Illuminate\Support\Carbon $updated_at
+ * @property \App\Models\Auth\User $user
  */
 class OauthToken extends Model
 {
@@ -49,4 +51,9 @@ class OauthToken extends Model
         'provider_type' => OauthProviderType::class,
         'expired_at' => 'datetime',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

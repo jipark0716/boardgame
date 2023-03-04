@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Repositories\Discord;
 
 use App\Exceptions\DiscordAuthrizeException;
-use App\Models\Auth\OauthToken;
 
 class DiscordUserRepository extends DiscordRepository
 {
-    public function getUserIdByOauthToken(OauthToken $token): string
+    public function getUserIdByOauthToken(string $token): string
     {
         $response = (clone $this->request)->withHeaders([
-            'Authorization' => 'Bearer ' . $token->access_token,
+            'Authorization' => 'Bearer ' . $token,
         ])->get('/users/@me');
 
         return $response->json('id') ?? throw new DiscordAuthrizeException(

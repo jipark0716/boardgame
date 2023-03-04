@@ -6,14 +6,18 @@ namespace App\Services\Auth;
 
 use App\Arguments\Auth\AuthrizeRedirectArgument;
 use App\Repositories\Auth\OauthTokenRepository;
+use App\Repositories\Auth\UserRepository;
 use App\Repositories\Discord\DiscordAuthRepository;
+use App\Repositories\Discord\DiscordUserRepository;
 use Illuminate\Http\RedirectResponse;
 
 class DiscordAuthService
 {
     public function __construct(
         private readonly DiscordAuthRepository $discordAuthRepository,
+        private readonly DiscordUserRepository $discordUserRepository,
         private readonly OauthTokenRepository $oauthTokenRepository,
+        private readonly UserRepository $userRepository,
     ) {
     }
 
@@ -34,6 +38,20 @@ class DiscordAuthService
     {
         $response = $this->discordAuthRepository->registerByAuthorizationCode($argument->code);
 
-        return $this->oauthTokenRepository->createTokenForDiscord($response);
+        $providerUserId = $this->discordUserRepository->getUserIdByOauthToken($response->json('access_token'));
+
+        if ($token = $this->oauthTokenRepository->getByDiscordUserId($providerUserId)) {
+            return $token->user;
+        }
+
+        $user = $this->userRepository->create();
+
+        $this->oauthTokenRepository->createForDiscord(
+            user: $user,
+            response: $response,
+            providerUserId: $providerUserId,
+        );
+
+        return $user;
     }
 }
