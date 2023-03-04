@@ -11,7 +11,7 @@ return new class extends Migration
     /**
      * @var string $table
      */
-    protected $table = '{{ table }}';
+    protected $table = 'oauth_tokens';
 
     /**
      * Run the migrations.
@@ -20,6 +20,13 @@ return new class extends Migration
     {
         Schema::create($this->table, function (Blueprint $table): void {
             $table->id();
+            $table->bigInteger('user_id');
+            $table->tinyInteger('provider_type');
+            $table->string('provider_user_id');
+            $table->string('access_token');
+            $table->string('refresh_token');
+            $table->string('scope');
+            $table->datetime('expired_at');
             $table->timestamps();
         });
     }

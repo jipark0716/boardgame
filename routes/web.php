@@ -1,15 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Http\Controllers\Auth\DiscordController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+Route::group(
+    [
+        'prefix' => 'oauth/discord',
+        'controller' => DiscordController::class,
+        'as' => 'auth.discord.'
+    ],
+    function (): void {
+        Route::get('authorize', 'authorizeRedirect');
+        Route::get('redirect', 'redirect')->name('redirect');
+    },
+);
+
 Route::view('', 'pages.main');

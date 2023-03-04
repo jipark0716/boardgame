@@ -34,5 +34,6 @@ return [
     'discord' => [
         'key' => env('DISCORD_CLIENT_ID'),
         'secret' => env('DISCORD_CLIENT_SECRET'),
+        'endpoint' => 'https://discord.com/api/v10',
     ]
 ];
