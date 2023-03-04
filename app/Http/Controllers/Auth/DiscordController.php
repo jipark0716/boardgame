@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\AuthrizeRedirectRequest;
 use App\Services\Auth\DiscordAuthService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Http;
+use Laravel\Passport\PersonalAccessTokenResult;
 
 class DiscordController extends Controller
 {
@@ -25,7 +25,7 @@ class DiscordController extends Controller
         return $this->discordAuthService->getAuthorizeRedirect();
     }
 
-    public function redirect(AuthrizeRedirectRequest $request)
+    public function redirect(AuthrizeRedirectRequest $request): PersonalAccessTokenResult
     {
         return $this->discordAuthService->registerByAuthorizationCode($request->createArgument());
     }

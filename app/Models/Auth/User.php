@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models\Auth;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Passport\HasApiTokens;
 
 /**
  * @property int $id
@@ -15,14 +16,25 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property ?\Illuminate\Support\Carbon $updated_at
  * @property \App\Models\Auth\OauthToken $tokens
  */
-class User extends Model
+class User extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, HasApiTokens;
 
     /**
      * @var string $connection
      */
     protected $connection = 'auth';
+
+    /**
+     * Find the user instance for the given username.
+     *
+     * @param  string  $username
+     * @return ?self
+     */
+    public function findForPassport(string $username): ?self
+    {
+        return $this->whereId($username)->first();
+    }
 
     public function tokens(): HasMany
     {

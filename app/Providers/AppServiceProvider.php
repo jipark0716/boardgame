@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Models\Auth\OauthToken;
-use App\Observers\Auth\OauthTokenObserver;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Passport\Passport;
+use App\Models\Auth\Passport\{
+    Token,
+    Client,
+    AuthCode,
+    PersonalAccessClient,
+};
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->initPassport();
     }
 
     /**
@@ -43,6 +48,17 @@ class AppServiceProvider extends ServiceProvider
 
     private function initObserver(): void
     {
-        OauthToken::observe(OauthTokenObserver::class);
+    }
+
+    private function initPassport(): void
+    {
+        Passport::useTokenModel(Token::class);
+        Passport::useClientModel(Client::class);
+        Passport::useAuthCodeModel(AuthCode::class);
+        Passport::usePersonalAccessClientModel(PersonalAccessClient::class);
+
+        Passport::tokensExpireIn(now()->addHours(2));
+        Passport::refreshTokensExpireIn(now()->addMonth());
+        // Passport::ignoreRoutes();
     }
 }
