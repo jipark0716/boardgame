@@ -11,7 +11,7 @@ return new class extends Migration
     /**
      * @var string $table
      */
-    protected $table = '{{ table }}';
+    protected $table = 'users';
 
     /**
      * Run the migrations.
@@ -20,6 +20,7 @@ return new class extends Migration
     {
         Schema::create($this->table, function (Blueprint $table): void {
             $table->id();
+            $table->string('nick_name')->nullable();
             $table->timestamps();
         });
     }

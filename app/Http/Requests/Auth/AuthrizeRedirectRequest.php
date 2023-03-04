@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-namespace {{ namespace }};
+namespace App\Http\Requests\Auth;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Arguments\Auth\AuthrizeRedirectArgument;
 use App\Http\Requests\CreateArgumentable;
+use Illuminate\Foundation\Http\FormRequest;
 
-class {{ class }} extends FormRequest implements CreateArgumentable
+class AuthrizeRedirectRequest extends FormRequest
 {
     use CreateArgumentable;
 
     /**
      * @var string $argumentClass
      */
-    public string $argumentClass = '\Argument';
+    public string $argumentClass = AuthrizeRedirectArgument::class;
 
     /**
      * Get the validation rules that apply to the request.
@@ -24,16 +25,7 @@ class {{ class }} extends FormRequest implements CreateArgumentable
     public function rules(): array
     {
         return [
-            //
+            'code' => 'required|string'
         ];
     }
-
-    /**
-     *
-     */
-    public function createArgumentInterface():
-    {
-
-    }
-
 }
